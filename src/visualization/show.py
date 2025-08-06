@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 from data_classes.frame import FrameData
 
@@ -6,11 +7,14 @@ from utils.utils import FPSCounter
 
 
 class Show:
-    def __init__(self, conf):
+    def __init__(self, conf, traffic_rois: list[np.ndarray]):
         self.conf = conf
 
         self.fps_buffer = conf["show"]["fps_buffer"]
+        self.draw_roi = conf["show"]["draw_roi"]
         self.show = conf["show"]["show"]
+
+        self.traffic_rois = traffic_rois
 
         if self.fps_buffer > 1:
             self.fps_counter = FPSCounter(self.fps_buffer)
@@ -43,6 +47,10 @@ class Show:
                     2,
                 )
                 cv2.rectangle(frame_data.frame_out, (bbox[0], bbox[1]), (bbox[2], bbox[3]), self.get_color(id_), 1)
+
+            if self.draw_roi:
+                for roi in self.traffic_rois:
+                    cv2.polylines(frame_data.frame_out, [roi], True, (0, 255, 0), 2)
 
         if self.show:
             cv2.imshow('frame', frame_data.frame_out)

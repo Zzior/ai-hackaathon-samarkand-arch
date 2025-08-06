@@ -3,13 +3,17 @@ defaults:
 
 
 source_info:
-  src: ${oc.env:VIDEO_SOURCE, "media/1_all.mov"}
+  src: ${oc.env:VIDEO_SOURCE, "media/test_1.mov"}
+  traffic_roi: [
+    [[370, 640], [960, 695], [1025, 465], [1055, 360], [1095, 265], [1145, 180], [930, 180], [745, 310]],
+    [[1010, 700], [1680, 740], [1430, 340], [1375, 190], [1172, 180], [1105, 320]]
+  ]
 
 
 detection:
-  weight_pth: "weights/yolo11m.pt"
+  weight_pth: "weights/best_s.pt"
   tracker_pth: "configs/botsort.yaml"  # bytetrack.yaml, botsort.yaml
-  classes_to_detect: [0, 2, 5, 7, 9]
+  classes_to_detect: [0, 1, 2, 3]
   confidence: 0.2
   iou: 0.7
   imgsz: 640
@@ -17,4 +21,5 @@ detection:
 
 show:
   show: True
+  draw_roi: True
   fps_buffer: 15  # calculate if buffer > 1
