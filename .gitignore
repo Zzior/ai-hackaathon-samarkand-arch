@@ -1,0 +1,9 @@
+train/
+src/outputs/
+
+.env
+
+*.pyc
+.idea/
+.venv/
+__pycache__/
