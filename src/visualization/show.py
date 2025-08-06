@@ -31,8 +31,38 @@ class Show:
                 2
             )
 
+            track_info = zip(frame_data.track_xyxy, frame_data.track_id, frame_data.track_cls, frame_data.track_conf)
+            for bbox, id_, cls, conf in track_info:
+                cv2.putText(
+                    frame_data.frame_out,
+                    f"{cls} {round(conf, 2)}",
+                    (bbox[0] + 5, bbox[1] + 30),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7,
+                    (0, 255, 0),
+                    2,
+                )
+                cv2.rectangle(frame_data.frame_out, (bbox[0], bbox[1]), (bbox[2], bbox[3]), self.get_color(id_), 1)
+
         if self.show:
             cv2.imshow('frame', frame_data.frame_out)
             cv2.waitKey(1)
 
         return frame_data
+
+    @staticmethod
+    def get_color(id_: int) -> tuple[int, int, int]:
+        colors = [
+            (255, 0, 0),  # Red
+            (0, 255, 0),  # Green
+            (0, 0, 255),  # Blue
+            (255, 255, 0),  # Yellow
+            (255, 0, 255),  # Purple
+            (0, 255, 255),  # Blue
+            (255, 20, 147),  # Deep Pink
+            (255, 165, 0),  # Orange
+            (32, 178, 170),  # Light Sea
+            (148, 0, 211)  # Dark Violet
+        ]
+
+        return colors[id_ % 10]

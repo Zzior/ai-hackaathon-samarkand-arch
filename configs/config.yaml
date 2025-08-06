@@ -3,14 +3,14 @@ defaults:
 
 
 source_info:
-  src: ${oc.env:VIDEO_SOURCE, "media/test_1.mov"}
+  src: ${oc.env:VIDEO_SOURCE, "media/1_all.mov"}
 
 
 detection:
-  weight_pth: "weights/best.pt"
-  # tracker_pth: "configs/botsort.yaml"  # bytetrack.yaml, botsort.yaml
-  classes_to_detect: [0, 1]
-  confidence: 0.7
+  weight_pth: "weights/yolo11m.pt"
+  tracker_pth: "configs/botsort.yaml"  # bytetrack.yaml, botsort.yaml
+  classes_to_detect: [0, 2, 5, 7, 9]
+  confidence: 0.2
   iou: 0.7
   imgsz: 640
 
