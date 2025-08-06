@@ -16,4 +16,5 @@ detection:
 
 
 show:
-  show: False
+  show: True
+  fps_buffer: 15  # calculate if buffer > 1

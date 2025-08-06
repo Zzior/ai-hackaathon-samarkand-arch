@@ -2,23 +2,23 @@ from pathlib import Path
 
 import hydra
 
-import cv2
+from models.video_reader import VideoReader
+
+from visualization.show import Show
 
 project_dir = Path(__file__).parent.parent
 conf_dir = project_dir / "configs"
 
 @hydra.main(version_base=None, config_path=conf_dir.__str__(), config_name="config")
 def main(config) -> None:
-    src = project_dir / config["source_info"]["src"]
-    cap = cv2.VideoCapture(str(src))
+    video_reader = VideoReader(str(project_dir / config["source_info"]["src"]))
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+    show = Show(config)
 
-        cv2.imshow("frame", frame)
-        cv2.waitKey(1)
+    for frame_data in video_reader.process():
+
+        if config["show"]["show"]:
+            show.process(frame_data)
 
 if __name__ == "__main__":
     main()
