@@ -1,0 +1,19 @@
+defaults:
+  - _self_
+
+
+source_info:
+  src: ${oc.env:VIDEO_SOURCE, "media/test_1.mov"}
+
+
+detection:
+  weight_pth: "weights/best.pt"
+  # tracker_pth: "configs/botsort.yaml"  # bytetrack.yaml, botsort.yaml
+  classes_to_detect: [0, 1]
+  confidence: 0.7
+  iou: 0.7
+  imgsz: 640
+
+
+show:
+  show: False
