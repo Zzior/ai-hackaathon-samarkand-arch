@@ -5,6 +5,7 @@ import hydra
 import numpy as np
 
 from models.video_reader import VideoReader
+from models.track_observer import TrackObserver
 from models.detection_tracking import DetectionTracking
 
 from visualization.show import Show
@@ -20,11 +21,13 @@ def main(config) -> None:
 
     video_reader = VideoReader(str(project_dir / config["source_info"]["src"]))
     detection_tracking = DetectionTracking(config, project_dir)
+    track_observer = TrackObserver(config, traffic_rois)
 
     show = Show(config, traffic_rois)
 
     for frame_data in video_reader.process():
         frame_data = detection_tracking.process(frame_data)
+        frame_data = track_observer.process(frame_data)
 
         if config["show"]["show"]:
             show.process(frame_data)

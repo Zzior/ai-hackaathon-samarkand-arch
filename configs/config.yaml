@@ -14,6 +14,7 @@ detection:
   weight_pth: "weights/best_s.pt"
   tracker_pth: "configs/botsort.yaml"  # bytetrack.yaml, botsort.yaml
   classes_to_detect: [0, 1, 2, 3]
+  track_buffer: 15
   confidence: 0.2
   iou: 0.7
   imgsz: 640
@@ -22,4 +23,5 @@ detection:
 show:
   show: True
   draw_roi: True
+  draw_person_way: True
   fps_buffer: 15  # calculate if buffer > 1

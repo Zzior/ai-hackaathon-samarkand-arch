@@ -17,4 +17,4 @@ class FrameData:
     track_conf: list[float] = field(default_factory=list)
     track_cls: list[str] = field(default_factory=list)
 
-    persons: list[Person] = field(default_factory=list)
+    people: dict[int, Person] = field(default_factory=dict)

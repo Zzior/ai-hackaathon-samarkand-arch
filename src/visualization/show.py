@@ -10,6 +10,7 @@ class Show:
     def __init__(self, conf, traffic_rois: list[np.ndarray]):
         self.conf = conf
 
+        self.draw_person_way = conf["show"]["draw_person_way"]
         self.fps_buffer = conf["show"]["fps_buffer"]
         self.draw_roi = conf["show"]["draw_roi"]
         self.show = conf["show"]["show"]
@@ -22,7 +23,7 @@ class Show:
             self.fps_counter = None
 
     def process(self, frame_data: FrameData) -> FrameData:
-        frame_data.frame_out = frame_data.frame
+        frame_data.frame_out = frame_data.frame.copy()
 
         if self.fps_counter is not None:
             cv2.putText(
@@ -35,28 +36,53 @@ class Show:
                 2
             )
 
-            track_info = zip(frame_data.track_xyxy, frame_data.track_id, frame_data.track_cls, frame_data.track_conf)
-            for bbox, id_, cls, conf in track_info:
-                cv2.putText(
-                    frame_data.frame_out,
-                    f"{cls} {round(conf, 2)}",
-                    (bbox[0] + 5, bbox[1] + 30),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.7,
-                    (0, 255, 0),
-                    2,
-                )
-                cv2.rectangle(frame_data.frame_out, (bbox[0], bbox[1]), (bbox[2], bbox[3]), self.get_color(id_), 1)
+        track_info = zip(frame_data.track_xyxy, frame_data.track_id, frame_data.track_cls, frame_data.track_conf)
+        for bbox, id_, cls, conf in track_info:
+            if cls == "person":
+                self.draw_person(frame_data, bbox, id_, cls, conf)
+            else:
+                self.draw_other(frame_data, bbox, id_, cls, conf)
 
-            if self.draw_roi:
-                for roi in self.traffic_rois:
-                    cv2.polylines(frame_data.frame_out, [roi], True, (0, 255, 0), 2)
+
+        if self.draw_roi:
+            for roi in self.traffic_rois:
+                cv2.polylines(frame_data.frame_out, [roi], True, (0, 255, 0), 2)
 
         if self.show:
             cv2.imshow('frame', frame_data.frame_out)
             cv2.waitKey(1)
 
         return frame_data
+
+    @staticmethod
+    def draw_box(frame: np.ndarray, xyxy: list[int], text: str, color: tuple[int, int, int]) -> np.ndarray:
+        cv2.rectangle(frame, (xyxy[0], xyxy[1]), (xyxy[2], xyxy[3]), color, 1)
+        cv2.putText(
+            frame,
+            text,
+            (xyxy[0] + 5, xyxy[1] + 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),
+            3,
+        )
+        return frame
+
+    def draw_person(self, frame_data: FrameData, bbox, id_, cls, conf):
+        people = frame_data.people[id_]
+        if people.num_dangers_frames > 20:
+            color = (0, 255, 255)
+        else:
+            color = (0, 255, 0)
+
+        if self.draw_person_way:
+            for line_id in range(len(people.points) - 1):
+                cv2.line(frame_data.frame_out, people.points[line_id], people.points[line_id + 1], color, 2)
+
+        self.draw_box(frame_data.frame_out, bbox, f"{cls} {round(conf, 2)}", color)
+
+    def draw_other(self, frame_data: FrameData, bbox, id_, cls, conf):
+        self.draw_box(frame_data.frame_out, bbox, f"{cls} {round(conf, 2)}", self.get_color(id_))
 
     @staticmethod
     def get_color(id_: int) -> tuple[int, int, int]:
