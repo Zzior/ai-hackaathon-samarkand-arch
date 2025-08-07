@@ -15,12 +15,12 @@ This project leverages deep learning models (e.g., YOLO, CNNs) for real-time acc
 **Install PyTorch**  
    Visit [https://pytorch.org](https://pytorch.org) and select the appropriate installation command for your system (OS, Python version, CUDA).
 
-   Example (CPU only):
+   Example:
    ```bash
    pip3 install torch torchvision
-````
+   ````
 
-2. **Install other dependencies**
+**Install other dependencies**
 
    ```bash
    pip install -r requirements.txt
