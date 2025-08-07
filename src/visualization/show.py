@@ -40,6 +40,10 @@ class Show:
         for bbox, id_, cls, conf in track_info:
             if cls == "person":
                 self.draw_person(frame_data, bbox, id_, cls, conf)
+
+            elif cls == "car":
+                self.draw_car(frame_data, bbox, id_, cls, conf)
+
             else:
                 self.draw_other(frame_data, bbox, id_, cls, conf)
 
@@ -56,7 +60,7 @@ class Show:
 
     @staticmethod
     def draw_box(frame: np.ndarray, xyxy: list[int], text: str, color: tuple[int, int, int]) -> np.ndarray:
-        cv2.rectangle(frame, (xyxy[0], xyxy[1]), (xyxy[2], xyxy[3]), color, 1)
+        cv2.rectangle(frame, (xyxy[0], xyxy[1]), (xyxy[2], xyxy[3]), color, 2)
         cv2.putText(
             frame,
             text,
@@ -64,13 +68,13 @@ class Show:
             cv2.FONT_HERSHEY_SIMPLEX,
             0.7,
             (0, 255, 0),
-            3,
+            2,
         )
         return frame
 
     def draw_person(self, frame_data: FrameData, bbox, id_, cls, conf):
         people = frame_data.people[id_]
-        if people.num_dangers_frames > 20:
+        if people.num_dangers_frames > 2:
             color = (0, 255, 255)
         else:
             color = (0, 255, 0)
@@ -80,6 +84,10 @@ class Show:
                 cv2.line(frame_data.frame_out, people.points[line_id], people.points[line_id + 1], color, 2)
 
         self.draw_box(frame_data.frame_out, bbox, f"{cls} {round(conf, 2)}", color)
+
+
+    def draw_car(self, frame_data: FrameData, bbox, id_, cls, conf):
+        self.draw_box(frame_data.frame_out, bbox, f"{cls} {round(conf, 2)}", (255, 0, 0))
 
     def draw_other(self, frame_data: FrameData, bbox, id_, cls, conf):
         self.draw_box(frame_data.frame_out, bbox, f"{cls} {round(conf, 2)}", self.get_color(id_))
