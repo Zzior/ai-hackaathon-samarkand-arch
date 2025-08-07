@@ -40,9 +40,3 @@ python3 src/main.py
 
 * Ensure your webcam or video input is connected/configured.
 * Optional: Configure video source or model paths in `main.py` if needed.
-
----
-
-## 👤 Author
-
-Your Name or GitHub profile here.
