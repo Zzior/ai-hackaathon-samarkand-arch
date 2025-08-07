@@ -76,6 +76,10 @@ class Show:
         people = frame_data.people[id_]
         if people.num_dangers_frames > 2:
             color = (0, 255, 255)
+
+        elif people.crash:
+            color = (0, 0, 255)
+            cv2.putText(frame_data.frame_out, "Detected accident", (1000, 100), 1, 5, (0, 0, 255),5)
         else:
             color = (0, 255, 0)
 
