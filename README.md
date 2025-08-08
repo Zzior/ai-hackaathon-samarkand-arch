@@ -25,6 +25,17 @@ This project leverages deep learning models (e.g., YOLO, CNNs) for real-time acc
    ```bash
    pip install -r requirements.txt
    ```
+---
+## ⚙️ Configuration (`config.yaml`)
+
+Main sections you can edit:
+
+- **`source_info`** — video source and ROI.
+- **`detection`** — YOLO model, tracker, detection params.
+- **`show`** — on-screen display options.
+- **`web_mov`** — web streaming settings.
+- **`video_writer`** — save video to disk.
+- **`notify`** — Telegram alerts (location, buffer, bot token, chat ID).
 
 ---
 
@@ -35,8 +46,5 @@ python3 src/main.py
 ```
 
 ---
-
-## 📌 Notes
-
-* Ensure your webcam or video input is connected/configured.
-* Optional: Configure video source or model paths in `main.py` if needed.
+## 🌍 Frontend repository
+https://github.com/khurshed555/ai-hackathon-samarkand-arch-frontend
