@@ -10,6 +10,7 @@ from models.detection_tracking import DetectionTracking
 
 from visualization.show import Show
 from visualization.web import VideoServer
+from visualization.video_writer import VideoWriter
 
 project_dir = Path(__file__).parent.parent
 conf_dir = project_dir / "configs"
@@ -24,6 +25,7 @@ def main(config) -> None:
     detection_tracking = DetectionTracking(config, project_dir)
     track_observer = TrackObserver(config, traffic_rois)
 
+    video_writer = VideoWriter(config, project_dir)
     show = Show(config, traffic_rois)
     web = VideoServer(config)
 
@@ -34,10 +36,13 @@ def main(config) -> None:
         frame_data = detection_tracking.process(frame_data)
         frame_data = track_observer.process(frame_data)
 
-        if config["show"]["show"] or config["web_mov"]["show"]:
+        if config["show"]["show"] or config["web_mov"]["show"] or config["video_writer"]["write"]:
             frame_data = show.process(frame_data)
             if config["web_mov"]["show"]:
                 web.update_image(frame_data.frame_out)
+
+            if config["video_writer"]["write"]:
+                video_writer.process(frame_data)
 
 
 if __name__ == "__main__":
