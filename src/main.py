@@ -9,6 +9,7 @@ from models.track_observer import TrackObserver
 from models.detection_tracking import DetectionTracking
 
 from visualization.show import Show
+from visualization.web import VideoServer
 
 project_dir = Path(__file__).parent.parent
 conf_dir = project_dir / "configs"
@@ -24,13 +25,20 @@ def main(config) -> None:
     track_observer = TrackObserver(config, traffic_rois)
 
     show = Show(config, traffic_rois)
+    web = VideoServer(config)
+
+    if config["web_mov"]["show"]:
+        web.run()
 
     for frame_data in video_reader.process():
         frame_data = detection_tracking.process(frame_data)
         frame_data = track_observer.process(frame_data)
 
-        if config["show"]["show"]:
-            show.process(frame_data)
+        if config["show"]["show"] or config["web_mov"]["show"]:
+            frame_data = show.process(frame_data)
+            if config["web_mov"]["show"]:
+                web.update_image(frame_data.frame_out)
+
 
 if __name__ == "__main__":
     main()

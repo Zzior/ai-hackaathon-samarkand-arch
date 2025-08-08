@@ -21,4 +21,11 @@ show:
   show: True
   draw_roi: True
   draw_person_way: True
+  output_size: [1920, 1080]
   fps_buffer: 15  # calculate if buffer > 1
+
+web_mov:
+  show: False
+  host_ip: 0.0.0.0
+  port: 9020
+  fps: 12
