@@ -4,6 +4,7 @@ import hydra
 
 import numpy as np
 
+from models.notify import Notify
 from models.video_reader import VideoReader
 from models.track_observer import TrackObserver
 from models.detection_tracking import DetectionTracking
@@ -21,6 +22,7 @@ def main(config) -> None:
     for roi in config["source_info"]["traffic_roi"]:
         traffic_rois.append(np.array(roi, dtype=np.int32))
 
+    notify = Notify(config, project_dir)
     video_reader = VideoReader(str(project_dir / config["source_info"]["src"]))
     detection_tracking = DetectionTracking(config, project_dir)
     track_observer = TrackObserver(config, traffic_rois)
@@ -42,7 +44,9 @@ def main(config) -> None:
                 web.update_image(frame_data.frame_out)
 
             if config["video_writer"]["write"]:
-                video_writer.process(frame_data)
+                video_writer.process(frame_data.frame_out)
+
+        notify.process(frame_data)
 
 
 if __name__ == "__main__":

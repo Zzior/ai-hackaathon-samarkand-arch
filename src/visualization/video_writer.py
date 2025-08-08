@@ -2,14 +2,12 @@ from pathlib import Path
 from datetime import datetime
 
 import cv2
-
-from data_classes.frame import FrameData
+import numpy as np
 
 
 class VideoWriter:
-    def __init__(self, config, project_dir: Path):
+    def __init__(self, config, project_dir: Path, filepath: str = None):
         self.config = config["video_writer"]
-
         self.fps = self.config["fps"]
         self.fourcc = self.config["fourcc"]
         self.skip_frames = self.config["skip_frames"]
@@ -24,36 +22,38 @@ class VideoWriter:
         self.total_frames_processed = 0
 
         self.segment_frames = int(self.fps * self.segment_size)
-        self.writer = self._create_new_writer()
+        self.writer = self.create_new_writer(filepath)
 
-    def _create_new_writer(self):
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = self.output_path / f"{timestamp}.mkv"
+
+    def create_new_writer(self, filepath: str = None) -> cv2.VideoWriter:
+        if not filepath:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filepath = self.output_path / f"{timestamp}.mkv"
 
         fourcc = cv2.VideoWriter_fourcc(*self.fourcc)  # noqa
-        writer = cv2.VideoWriter(str(filename), fourcc, self.fps, self.resolution)
+        writer = cv2.VideoWriter(str(filepath), fourcc, self.fps, self.resolution)
         return writer
 
-    def process(self, frame_data: FrameData) -> None:
-        if frame_data.frame_out is None:
+    def process(self, frame: np.ndarray) -> None:
+        if frame is None:
             return
 
         self.total_frames_processed += 1
         if (self.total_frames_processed % self.skip_frames) != 0:
             return
 
-        self.writer.write(frame_data.frame_out)
+        self.writer.write(frame)
         self.frames_in_segment += 1
 
         if self.frames_in_segment >= self.segment_frames:
-            self._close_current_writer()
+            self.close_current_writer()
             self.frames_in_segment = 0
-            self.writer = self._create_new_writer()
+            self.writer = self.create_new_writer()
 
-    def _close_current_writer(self):
+    def close_current_writer(self):
         if self.writer is not None:
             self.writer.release()
             self.writer = None
 
     def __del__(self):
-        self._close_current_writer()
+        self.close_current_writer()

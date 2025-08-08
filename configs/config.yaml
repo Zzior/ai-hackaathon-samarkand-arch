@@ -38,3 +38,13 @@ video_writer:
   skip_frames: 1
   fourcc: "XVID"
   fps: 30
+
+notify:
+  location_name: "Samarkand base street ..."
+  location: [39.655221, 66.971076]
+
+  buffer_size: 300  # FPS * second
+  output_path: "media/detected_accident"
+
+  chat_id: "10000000000"
+  token: "10000000000:token"
