@@ -1,6 +1,6 @@
 defaults:
   - _self_
-
+  # - config_override  # use it if you need to override
 
 source_info:
   src: ${oc.env:VIDEO_SOURCE, "media/test.mov"}
