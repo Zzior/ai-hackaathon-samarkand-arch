@@ -1,0 +1,24 @@
+defaults:
+  - _self_
+  # - config_train_override  # use it if you need to override
+
+
+show: True
+
+
+video_reader:
+  mov_source: "../../../media/test.mov"  # file full path | int camera | stram
+  mov_iterator: []  # if not empty: list[int, int] [start, end] | use mov_source: "media/train_{i}.mov"
+  skip_frames: 4 # 1: dont skip
+
+detection:
+  weights_path: "../../../weights/best_s.pt"  # file full path
+  imgsz: 640
+  iou: 0.5
+
+  classes_param: { # id: [min_conf, max_conf]
+    0: [ 0.20, 0.90 ], # person
+    1: [ 0.20, 0.90 ], # car
+    2: [ 0.20, 0.90 ], # traffic_light
+    3: [ 0.20, 0.90 ], # crosswalk
+  }
