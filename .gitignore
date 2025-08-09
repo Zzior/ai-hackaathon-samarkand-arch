@@ -1,5 +1,7 @@
-train/
+media/
+!storage/test.mov
 src/outputs/
+src/train/train_collector/outputs
 
 .env
 
