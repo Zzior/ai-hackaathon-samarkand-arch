@@ -1,5 +1,7 @@
 media/
-!storage/test.mov
+!media/test.mov
+!media/demo.gif
+!media/demo_1.gif
 src/outputs/
 src/train/train_collector/outputs
 
