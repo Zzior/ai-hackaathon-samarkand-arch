@@ -48,3 +48,11 @@ python3 src/main.py
 ---
 ## 🌍 Frontend repository
 https://github.com/khurshed555/ai-hackathon-samarkand-arch-frontend
+
+---
+## 🎬 Demo
+❇️ The usual case and the passage in the wrong place
+![demo1](./media/demo_1.gif)
+
+⚠️ An emergency
+![demo0](./media/demo.gif)
